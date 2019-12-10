@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "led.h": "c",
+        "key.h": "c",
+        "zc06.h": "c",
+        "sht31.h": "c",
+        "e2prom.h": "c",
+        "conn_mgr.h": "c"
+    }
+}
