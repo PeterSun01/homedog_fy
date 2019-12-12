@@ -326,13 +326,19 @@ static void user_post_property(void)
     static int cnt = 0;
     int res = 0;
 
-    char property_payload[30] = {0};
+    char property_payload[100] = {0};
 
     cJSON *root = cJSON_CreateObject();
 
     cJSON_AddItemToObject(root, "Temperature", cJSON_CreateNumber(Temperature));
     cJSON_AddItemToObject(root, "Humidity", cJSON_CreateNumber(Humidity)); 
     cJSON_AddItemToObject(root, "mq2", cJSON_CreateNumber(mq2)); 
+
+    cJSON_AddItemToObject(root, "TemperatureType", cJSON_CreateNumber(0));
+    cJSON_AddItemToObject(root, "mq2Type", cJSON_CreateNumber(0)); 
+    cJSON_AddItemToObject(root, "HumidityType", cJSON_CreateNumber(0)); 
+    cJSON_AddItemToObject(root, "PhoneType", cJSON_CreateNumber(0)); 
+
 
     wifi_ap_record_t wifidata;
     if (esp_wifi_sta_get_ap_info(&wifidata) == 0)
