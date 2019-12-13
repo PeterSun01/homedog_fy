@@ -7,6 +7,11 @@ double Temperature ;
 double Humidity ;
 double mq2 ;
 
+int TemperatureType;
+int mq2Type;
+int HumidityType;
+int PhoneType;
+
 
 extern void ZIGBEE_Init(void);
 

@@ -330,6 +330,9 @@ static void user_post_property(void)
 
     cJSON *root = cJSON_CreateObject();
 
+    //cJSON_AddItemToObject(root, "DeviceType", cJSON_CreateNumber(2));
+    //cJSON_AddItemToObject(root, "SlaveId", cJSON_CreateString((char *)"SL001"));
+
     cJSON_AddItemToObject(root, "Temperature", cJSON_CreateNumber(Temperature));
     cJSON_AddItemToObject(root, "Humidity", cJSON_CreateNumber(Humidity)); 
     cJSON_AddItemToObject(root, "mq2", cJSON_CreateNumber(mq2)); 
@@ -338,6 +341,7 @@ static void user_post_property(void)
     cJSON_AddItemToObject(root, "mq2Type", cJSON_CreateNumber(0)); 
     cJSON_AddItemToObject(root, "HumidityType", cJSON_CreateNumber(0)); 
     cJSON_AddItemToObject(root, "PhoneType", cJSON_CreateNumber(0)); 
+    
 
 
     wifi_ap_record_t wifidata;

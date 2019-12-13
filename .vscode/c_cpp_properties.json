@@ -4,8 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "~/esp32/esp-idf/components/**",
-                "~/esp32/esp-aliyun/**"
+                "/esp/esp-idf/components/**",
+                "/esp/esp-aliyun/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
