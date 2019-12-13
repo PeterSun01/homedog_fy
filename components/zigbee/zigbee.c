@@ -8,6 +8,8 @@
 #include "Led.h"
 #include "zigbee.h"
 
+#include "linkkit_solo.h"
+
 
 #define UART1_TXD  (UART_PIN_NO_CHANGE)
 #define UART1_RXD  (GPIO_NUM_34)
@@ -45,7 +47,7 @@ void ZIGBEE_Init(void)
     uart_param_config(UART_NUM_1, &uart_config);
     uart_set_pin(UART_NUM_1, UART1_TXD, UART1_RXD, UART1_RTS, UART1_CTS);
     uart_driver_install(UART_NUM_1, BUF_SIZE * 2, 0, 0, NULL, 0);
-    xTaskCreate(&ZIGBEE_Read_Task, "ZIGBEE_Read_Task", 4096, NULL, 10, NULL);
+    xTaskCreate(&ZIGBEE_Read_Task, "ZIGBEE_Read_Task", 10240, NULL, 10, NULL);
 }
 
 unsigned char CheckSum(unsigned char *pdata, unsigned char len)
@@ -63,6 +65,7 @@ unsigned char CheckSum(unsigned char *pdata, unsigned char len)
 void ZIGBEE_Read_Task(void* arg)
 {
     uint8_t data_u1[BUF_SIZE];
+    static int alarm_count=0;
     while(1)
     {
         int len1 = uart_read_bytes(UART_NUM_1, data_u1, BUF_SIZE, 20 / portTICK_RATE_MS);
@@ -82,7 +85,76 @@ void ZIGBEE_Read_Task(void* arg)
                 Humidity    =data_u1[5];
                 mq2         =data_u1[6];
                 
+                
+                #define MQ2_MAX      50
+                #define TEMP_MAX     40
+                #define HUM_MAX      50
 
+                if(mq2>MQ2_MAX)
+                {
+                    mq2Type=1;
+                    alarm_count++;
+                    if(alarm_count>10)
+                    {
+                        alarm_count=10;
+                    }
+                }
+                else
+                {
+                    mq2Type=0;
+                }
+
+                if(Temperature>TEMP_MAX)
+                {
+                    TemperatureType=1;
+                    alarm_count++;
+                    if(alarm_count>10)
+                    {
+                        alarm_count=10;
+                    }
+                }
+                else
+                {
+                    TemperatureType=0;
+                }
+
+                if(Humidity>HUM_MAX)
+                {
+                    HumidityType=1;
+                    alarm_count++;
+                    if(alarm_count>10)
+                    {
+                        alarm_count=10;
+                    }
+                }
+                else
+                {
+                    HumidityType=0;
+                }
+
+
+                if((HumidityType==0)&&(TemperatureType==0)&&(mq2Type==0))
+                {
+                    alarm_count=0;
+                    PhoneType=0;
+                    up_time=30;
+                }
+                else
+                {
+                    up_time=3;
+                }
+                
+
+                if(alarm_count==1)
+                {
+                    PhoneType=1;
+                    user_post_event();
+                }
+                else if(alarm_count>1)
+                {
+                    PhoneType=2;
+                }
+                
 
             }
             printf("mq2=%f\r\n",mq2);

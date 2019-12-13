@@ -27,4 +27,5 @@
 int linkkit_main(void *paras);
 extern void user_post_event(void);
 
+
 #endif

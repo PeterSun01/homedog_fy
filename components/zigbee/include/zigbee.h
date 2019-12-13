@@ -12,6 +12,8 @@ int mq2Type;
 int HumidityType;
 int PhoneType;
 
+int up_time;
+
 
 extern void ZIGBEE_Init(void);
 

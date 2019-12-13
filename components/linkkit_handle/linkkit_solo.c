@@ -321,29 +321,27 @@ static int user_mqtt_connect_succ_event_handler(void)
     return SUCCESS_RETURN;
 }
 
-static void user_post_property(void)
+void user_post_property(void)
 {
     static int cnt = 0;
     int res = 0;
 
-    char property_payload[100] = {0};
+    char property_payload[200] = {0};
 
     cJSON *root = cJSON_CreateObject();
 
-    //cJSON_AddItemToObject(root, "DeviceType", cJSON_CreateNumber(2));
-    //cJSON_AddItemToObject(root, "SlaveId", cJSON_CreateString((char *)"SL001"));
+    cJSON_AddItemToObject(root, "DeviceType", cJSON_CreateNumber(2));
+    cJSON_AddItemToObject(root, "SlaveId", cJSON_CreateString((char *)"SL001"));
 
     cJSON_AddItemToObject(root, "Temperature", cJSON_CreateNumber(Temperature));
     cJSON_AddItemToObject(root, "Humidity", cJSON_CreateNumber(Humidity)); 
     cJSON_AddItemToObject(root, "mq2", cJSON_CreateNumber(mq2)); 
 
-    cJSON_AddItemToObject(root, "TemperatureType", cJSON_CreateNumber(0));
-    cJSON_AddItemToObject(root, "mq2Type", cJSON_CreateNumber(0)); 
-    cJSON_AddItemToObject(root, "HumidityType", cJSON_CreateNumber(0)); 
-    cJSON_AddItemToObject(root, "PhoneType", cJSON_CreateNumber(0)); 
+    cJSON_AddItemToObject(root, "TemperatureType", cJSON_CreateNumber(TemperatureType));
+    cJSON_AddItemToObject(root, "mq2Type", cJSON_CreateNumber(mq2Type)); 
+    cJSON_AddItemToObject(root, "HumidityType", cJSON_CreateNumber(HumidityType)); 
+    cJSON_AddItemToObject(root, "PhoneType", cJSON_CreateNumber(PhoneType)); 
     
-
-
     wifi_ap_record_t wifidata;
     if (esp_wifi_sta_get_ap_info(&wifidata) == 0)
     {
@@ -414,6 +412,8 @@ int linkkit_main(void *paras)
     int res = 0;
     iotx_linkkit_dev_meta_info_t master_meta_info;
     int domain_type = 0, dynamic_register = 0, post_reply_need = 0;
+
+    up_time=30;
 
 #ifdef ATM_ENABLED
     if (IOT_ATM_Init() < 0) {
@@ -490,7 +490,8 @@ int linkkit_main(void *paras)
             continue;
         }
 
-        if (time_now_sec % 11 == 0) 
+        
+        if (time_now_sec % up_time == 0) 
         {
             user_post_property();//10 sec upload once
         }
